@@ -13,10 +13,10 @@ import colorama
 
 colorama.init(autoreset=True)
 
-def start_bot():
+def main():
     print(colorama.Style.BRIGHT + colorama.Fore.LIGHTYELLOW_EX +
           "Welcome to bot-assistant 📞Phone Book📞! What can I help you with? 😊")
-    show_help()
+    print(show_help())
 
     contacts = {}
 
@@ -32,7 +32,7 @@ def start_bot():
         elif command == 'hello':
             print('How can I help you?')
         elif command == 'help':
-            show_help()
+            print(show_help())
         elif command == 'add':
             print(add_contact(args, contacts))
         elif command == 'change':
@@ -55,13 +55,13 @@ def parse_input(input_str: str):
 
 
 def show_help():
-    print("Command list:")
-    print("\tadd [name] [phone number]        | add new name and phone number")
-    print("\tphone [name]                     | find phone number by person's name")
-    print("\tchange [name] [new phone number] | edit phone number by person's name")
-    print("\tall                              | show all phone numbers")
-    print("\thelp                             | if you need to see this commands again")
-    print("\texit / close                     | to close bot-assistant")
+    return ("Command list:\n"
+            "\tadd [name] [phone number]        | add new name and phone number\n"
+            "\tphone [name]                     | find phone number by person's name\n"
+            "\tchange [name] [new phone number] | edit phone number by person's name\n"
+            "\tall                              | show all phone numbers\n"
+            "\thelp                             | if you need to see this commands again\n"
+            "\texit / close                     | to close bot-assistant")
 
 
 def change_contact(args, contacts:dict):
@@ -71,52 +71,52 @@ def change_contact(args, contacts:dict):
             contacts[name] = phone
             return colorama.Fore.GREEN + '✅ Contact changed!'
         else:
-            while True:
-                print(colorama.Fore.YELLOW + f"⚠️ Contact with name '{name}' not found. Create new contact?")
-                print("yes - create contact\n"
-                      "no - return to main menu")
-
-                answer = input('>> ').strip().lower()
-                if answer == 'yes':
-                    contacts[name] = phone
-                    return colorama.Fore.GREEN + '✅ Contact added!'
-
-                elif answer == 'no':
-                    return "Main menu. Type 'help' to see available commands"
-
-                else:
-                    print(colorama.Fore.YELLOW + "⚠️ Sorry, I don't understand")
-
-
+            return colorama.Fore.RED + f"🔴 Error! Contact with name '{name}' not found."
+            # while True:
+            #     print(colorama.Fore.YELLOW + f"⚠️ Contact with name '{name}' not found. Create new contact?")
+            #     print("yes - create contact\n"
+            #           "no - return to main menu")
+            #
+            #     answer = input('>> ').strip().lower()
+            #     if answer == 'yes':
+            #         contacts[name] = phone
+            #         return colorama.Fore.GREEN + '✅ Contact added!'
+            #
+            #     elif answer == 'no':
+            #         return "Main menu. Type 'help' to see available commands"
+            #
+            #     else:
+            #         print(colorama.Fore.YELLOW + "⚠️ Sorry, I don't understand")
     except ValueError:
-        return colorama.Fore.RED + "🔴 Error! Not enough arguments. Must be: edit [name] [phone number] "
+        return colorama.Fore.RED + "🔴 Error! Not enough arguments. Must be: edit [name] [phone number]"
 
 
 def add_contact(args, contacts:dict):
     try:
         name, phone = args
         if contacts.get(name):
-            while True:
-                print(colorama.Fore.YELLOW + f"⚠️ Contact with name '{name}' already exists. Number: {contacts.get(name)}. Do you want to overwrite it?")
-                print("yes - overwrite\n"
-                      "no - enter new name\n"
-                      "skip - return to main menu")
-
-                answer = input('>> ').strip().lower()
-                if answer == 'yes':
-                    contacts[name] = phone
-                    return colorama.Fore.GREEN + '✅ Contact changed!'
-
-                elif answer == 'no':
-                    new_name = input("Enter new name: ")
-                    contacts[new_name] = phone
-                    return colorama.Fore.GREEN + '✅ Contact added!'
-
-                elif answer == 'skip':
-                    return "Main menu. Type 'help' to see available commands"
-
-                else:
-                    print(colorama.Fore.YELLOW + "⚠️ Sorry, I don't understand")
+            return colorama.Fore.RED + f"🔴 Error! Contact with name '{name}' already exists. Number: {contacts.get(name)}."
+            # while True:
+            #     print(colorama.Fore.YELLOW + f"⚠️ Contact with name '{name}' already exists. Number: {contacts.get(name)}. Do you want to overwrite it?")
+            #     print("yes - overwrite\n"
+            #           "no - enter new name\n"
+            #           "skip - return to main menu")
+            #
+            #     answer = input('>> ').strip().lower()
+            #     if answer == 'yes':
+            #         contacts[name] = phone
+            #         return colorama.Fore.GREEN + '✅ Contact changed!'
+            #
+            #     elif answer == 'no':
+            #         new_name = input("Enter new name: ")
+            #         contacts[new_name] = phone
+            #         return colorama.Fore.GREEN + '✅ Contact added!'
+            #
+            #     elif answer == 'skip':
+            #         return "Main menu. Type 'help' to see available commands"
+            #
+            #     else:
+            #         print(colorama.Fore.YELLOW + "⚠️ Sorry, I don't understand")
 
         contacts[name] = phone
         return colorama.Fore.GREEN + '✅ Contact added!'
@@ -132,10 +132,11 @@ def find_contact(name, contacts:dict):
 
 
 def show_all(contacts:dict):
-    print("All contacts:")
+    all_contacts = "All contacts:\n"
     for i, (name, phone) in enumerate(contacts.items()):
-        print(f"{i+1}. {name}: {phone}")
+        all_contacts += f"{i+1}. {name}: {phone}\n"
+    return all_contacts
 
 
 if __name__ == '__main__':
-    start_bot()
+    main()
